@@ -10,4 +10,7 @@ nlp_scaling_method none
 mu_init 1e-2
 
 # Set the max number of iterations
-max_iter 500
+max_iter 3000
+
+# Verbosity level
+print_level 5

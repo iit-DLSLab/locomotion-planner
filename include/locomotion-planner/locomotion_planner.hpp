@@ -10,6 +10,7 @@
 #define __MyNLP_HPP__
 
 #include "IpTNLP.hpp"
+#include "locomotion-planner/motion_planner_base.hpp"
 #include <math.h>
 #include <Eigen/Dense>
 #include <iostream>
@@ -37,7 +38,7 @@ using namespace Ipopt;
  *
  *
  */
-class MyNLP : public TNLP
+class MyNLP : public TNLP, public MotionPlannerBase
 {
 public:
   /** default constructor */
@@ -106,12 +107,18 @@ public:
 
   Eigen::VectorXd& get_solution();
 
-  void getCoMTrajectory(Eigen::VectorXd& com_traj_x, Eigen::VectorXd& com_traj_y, Eigen::VectorXd& com_traj_z);
+ virtual void addTrajectoryConstraint(const unsigned int & initial_index,  
+                                    const Eigen::VectorXd & decision_variables, 
+                                    const unsigned int & knots_number,
+                                    const Eigen::VectorXd& increments, 
+                                    Eigen::MatrixXd & constr_violations);
 
-  void getFootTrajectory(Eigen::VectorXd& foot_traj_x,  
-                                              Eigen::VectorXd& foot_traj_y, 
-                                              Eigen::VectorXd& foot_traj_z,
-                                              unsigned int & foot_id);
+  //void getCoMTrajectory(Eigen::VectorXd& com_traj_x, Eigen::VectorXd& com_traj_y, Eigen::VectorXd& com_traj_z);
+//
+  //void getFootTrajectory(Eigen::VectorXd& foot_traj_x,  
+  //                                            Eigen::VectorXd& foot_traj_y, 
+  //                                            Eigen::VectorXd& foot_traj_z,
+  //                                            unsigned int & foot_id);
 
 private:
   /**@name Methods to block default compiler methods.
@@ -130,25 +137,32 @@ private:
 
   MyNLP& operator=(const MyNLP&);
   //@}
+  NumericalIntegrationConstraints integration_constr;
+  //void setCoMTrajectory();
+//
+  //void setFootTrajectory(unsigned int & foot_id);
 
-  void setCoMTrajectory();
+  //double b_foot[2] = {5.0,-2.0};
+  //double f_camera[2] = {2.0*sqrt(2),0.0};
+  double total_duration; 
+  Eigen::Vector3d target_com_pos;
+  Eigen::MatrixXd com_constr_violations;
+  Eigen::VectorXd desired_com_lin_vel;
 
-  void setFootTrajectory(unsigned int & foot_id);
-
-  double b_foot[2] = {5.0,-2.0};
-  double f_camera[2] = {2.0*sqrt(2),0.0};
-
+  unsigned int CoM_pos_index = 0;
+  unsigned int CoM_orient_index = 0;
   unsigned int states_per_knot = 0;
   unsigned int knots_num = 0;
   unsigned int constraints_per_knot = 0;
   unsigned int nnz_jac_g_per_knot = 0;
-  double total_cycle_duration = 0.0;
-  Eigen::VectorXd solution_;
-  Eigen::VectorXd initial_CoM_pos, initial_CoM_orient;
-  Eigen::VectorXd initial_feet_pos, initial_grfs;
-  Eigen::VectorXd com_traj_x, com_traj_y, com_traj_z;
-  Eigen::VectorXd foot_traj_x, foot_traj_y, foot_traj_z;
-  Eigen::VectorXd force_traj_x, force_traj_y, force_traj_z;
+  unsigned int optimization_points = 0;
+  unsigned int total_states_num = 0;
+  unsigned int total_constraints_num = 0;
+  unsigned int first_available_index = 0;
+  unsigned int CoM_variable_index;
+  unsigned int feet_number = 0;
+
+  bool enable_com_orientation = false;
 
 
 };

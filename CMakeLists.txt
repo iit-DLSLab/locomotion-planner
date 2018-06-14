@@ -30,6 +30,6 @@ include_directories(include ${catkin_INCLUDE_DIRS})
 include_directories("${PROJECT_BINARY_DIR}" /usr/local/include/coin/)						
 
 # creation of an executable
-add_executable(NL_planner motion_planner_example.cpp src/locomotion-planner.cpp)
+add_executable(NL_planner motion_planner_example.cpp src/locomotion_planner.cpp src/motion_planner_base.cpp src/NumericalIntegrationConstraints.cpp)
 target_link_libraries(NL_planner ${catkin_LIBRARIES} ipopt)
 set_target_properties(NL_planner PROPERTIES COMPILE_FLAGS "-std=c++11 -o3" RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/bin") 
