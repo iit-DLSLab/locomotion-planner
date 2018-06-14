@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<package>
+  <name>motion_planner</name>
+  <version>0.0.1</version>
+  <description>identify trunk CoM position without stopping the execution of the current task</description>
+
+  <maintainer email="hyq@advr.iit.it">HyQ Group</maintainer>
+
+  <!--   BSD, MIT, Boost Software License, GPLv2, GPLv3, LGPLv2.1, LGPLv3 -->
+  <license>TODO</license>
+  <!-- <url type="website">http://wiki.ros.org/hyq2max_controllers</url> -->
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>roscpp</build_depend>
+  <build_depend>roslib</build_depend>
+  <build_depend>rviz_visual_tools</build_depend>
+  <build_depend>motion_viewer</build_depend>
+  <run_depend>roscpp</run_depend>
+  <run_depend>roslib</run_depend>
+  <run_depend>rviz_visual_tools</run_depend>  
+  <run_depend>motion_viewer</run_depend>  
+
+</package>

@@ -1,0 +1,13 @@
+# This is a comment
+
+#set the type of Hessian approximation
+hessian_approximation limited-memory
+
+# Turn off the NLP scaling
+nlp_scaling_method none
+
+# Change the initial barrier parameter
+mu_init 1e-2
+
+# Set the max number of iterations
+max_iter 500
