@@ -8,7 +8,7 @@
 
 #include "IpIpoptApplication.hpp"
 #include "locomotion-planner/locomotion_planner.hpp"
-#include <locomotion-viewer/RvizMarkersPub.h>
+#include <locomotion-viewer/RvizMarkersPub.h> //includes also RvizPolygonsTools
 #include <locomotion-viewer/NormalDistribution.h>
 
 
@@ -30,7 +30,12 @@ int main(int argc, char** argv)
   NormalDistribution nd;
   Eigen::Vector3d noise1, noise2, des_vel, com_target, com_current, com_vel_current;
   Eigen::Vector3d com_current_orient, com_current_ang_vel;
-  com_target = Eigen::Vector3d(10.0,2.0,1.0);
+
+
+  com_target = Eigen::Vector3d(10.0,5.0,1.0);
+
+
+
   com_current.setZero();
   com_vel_current.setZero();
   com_current_orient.setZero();
@@ -38,14 +43,15 @@ int main(int argc, char** argv)
   double time_horizon = 5.0;
 
   des_vel = com_target/time_horizon;
-  com_vel_current = des_vel;
+  //com_vel_current = des_vel;
   double replanning_freq = 1.0;
   double replanning_dt = 1.0/replanning_freq;
 
-  while (ros::ok())
-  {
-  com_current += des_vel*replanning_dt;
-  com_target += des_vel*replanning_dt;
+ // while (ros::ok())
+ // {
+//  com_current += des_vel*replanning_dt;
+//  com_target += des_vel*replanning_dt;
+
   // Create a new instance of your nlp
   //  (use a SmartPtr, not raw)
   
@@ -74,14 +80,13 @@ int main(int argc, char** argv)
   mynlp->setOptimizationPoints(knots);
   mynlp->setTotalDuration(time_horizon);
   mynlp->addCoMPosConstraint();
-  mynlp->setInitialCoMPosition(com_current+noise1);
-  mynlp->setInitialCoMVelocity(com_vel_current+noise2);
-  
+  mynlp->setInitialCoMPosition(com_current);//+noise1);
+  mynlp->setInitialCoMVelocity(com_vel_current);//+noise2);
   //mynlp->addCoMOrientConstraint();
   mynlp->setInitialCoMOrientation(com_current_orient);
   mynlp->setInitialCoMAngVelocity(com_current_ang_vel);
-
   mynlp->setTargetCoMPosition(com_target);
+
   // Initialize the IpoptApplication and process the options
 //  ApplicationReturnStatus status;
   status = app->Initialize();
@@ -157,42 +162,56 @@ int main(int argc, char** argv)
   Eigen::Vector3d vertex7 = Eigen::Vector3d(-3.0, -4.0, 5.0);
   Eigen::Vector3d vertex8 = Eigen::Vector3d(-3.0, 2.0, 5.0);
 
+
   // As the SmartPtrs go out of scope, the reference count
   // will be decremented and the objects will automatically
   // be deleted.
 
-//    while (ros::ok())
-//    {
-    visual_poly_->deleteAllMarkers();
-    Eigen::Affine3d pose;
-    pose = Eigen::AngleAxisd(0.0, Eigen::Vector3d::UnitY()); // rotate along X axis by 45 degrees
-    pose.translation() = Eigen::Vector3d( 1.0, 1.0, 1.0 ); // translate x,y,z
-    
-    // Publish arrow vector of pose
-    ROS_INFO_STREAM_NAMED("test","Publishing Arrow");
-    //visual_poly_->publishXYPlane(pose, rviz_visual_tools::RED, rviz_visual_tools::LARGE);
+    while (ros::ok())
+    {
+        visual_poly_->deleteAllMarkers();
+        Eigen::Affine3d pose;
+        pose = Eigen::AngleAxisd(0.0, Eigen::Vector3d::UnitY()); // rotate along X axis by 45 degrees
+        pose.translation() = Eigen::Vector3d( 1.0, 1.0, 1.0 ); // translate x,y,z
 
-    //visual_poly_->publishArrow(pose, rviz_visual_tools::GREEN, rviz_visual_tools::LARGE);
-    
-    //visual_poly_->publishHexahedron(pose, vertex1, vertex2, vertex3, vertex4, vertex5, vertex6, vertex7, vertex8, true);
+        // Publish arrow vector of pose
+        //ROS_INFO_STREAM_NAMED("test","Publishing Arrow");
+        //visual_poly_->publishXYPlane(pose, rviz_visual_tools::RED, rviz_visual_tools::LARGE);
 
-    //visual_poly_->publishQuadrilateral(pose, vertex1, vertex2, vertex3, vertex6, true, rviz_visual_tools::GREEN);
-    
-    //vertex1(0)+=0.02;
-    //visual_poly_->publishTriangle(pose, Eigen::Vector3d(1.0,0.0,0.0), Eigen::Vector3d(0.0,1.0,0.0), Eigen::Vector3d(0.0,0.0,1.0));
+        //visual_poly_->publishArrow(pose, rviz_visual_tools::GREEN, rviz_visual_tools::LARGE);
 
-    //visual_poly_->publishQuadrilateral(pose, Eigen::Vector3d(1.0,0.0,0.0), Eigen::Vector3d(0.0,1.0,0.0),Eigen::Vector3d(-1.0,0.0,0.0), Eigen::Vector3d(0.0,-1.0,0.0));
+        //visual_poly_->publishHexahedron(pose, vertex1, vertex2, vertex3, vertex4, vertex5, vertex6, vertex7, vertex8, true);
 
-    visual_poly_->publishEigenPath(com_traj_x, com_traj_y, com_traj_z, rviz_visual_tools::BLUE, rviz_visual_tools::LARGE, "com_path");
-    //visual_poly_->publishEigenPath(foot_LF_x, foot_LF_y, foot_LF_z, rviz_visual_tools::RED, rviz_visual_tools::LARGE, "com_path");
-    //visual_poly_->publishEigenPath(foot_RF_x, foot_RF_y, foot_RF_z, rviz_visual_tools::RED, rviz_visual_tools::LARGE, "com_path");
-    //visual_poly_->publishEigenPath(foot_LH_x, foot_LH_y, foot_LH_z, rviz_visual_tools::RED, rviz_visual_tools::LARGE, "com_path");
-    //visual_poly_->publishEigenPath(foot_RH_x, foot_RH_y, foot_RH_z, rviz_visual_tools::RED, rviz_visual_tools::LARGE, "com_path");
-   
-    // Don't forget to trigger the publisher!
-    visual_poly_->trigger();
-    //r.sleep();
-    }
+        //visual_poly_->publishQuadrilateral(pose, vertex1, vertex2, vertex3, vertex6, true, rviz_visual_tools::GREEN);
+
+        //vertex1(0)+=0.02;
+        //visual_poly_->publishTriangle(pose, Eigen::Vector3d(1.0,0.0,0.0), Eigen::Vector3d(0.0,1.0,0.0), Eigen::Vector3d(0.0,0.0,1.0));
+
+        //visual_poly_->publishQuadrilateral(pose, Eigen::Vector3d(1.0,0.0,0.0), Eigen::Vector3d(0.0,1.0,0.0),Eigen::Vector3d(-1.0,0.0,0.0), Eigen::Vector3d(0.0,-1.0,0.0));
+
+        visual_poly_->publishEigenPath(com_traj_x, com_traj_y, com_traj_z, rviz_visual_tools::BLUE, rviz_visual_tools::LARGE, "com_path");
+
+        Eigen::VectorXd footLFx, footRFx, footLFy, footRFy,footLFz, footRFz;
+        footLFx = Eigen::VectorXd::LinSpaced(knots, 0, 10);
+        footRFx = Eigen::VectorXd::LinSpaced(knots, 0, 10);
+        footLFy = Eigen::VectorXd::LinSpaced(knots, 1, 1);
+        footRFy = Eigen::VectorXd::LinSpaced(knots, -1, -1);
+        footLFz = Eigen::VectorXd::LinSpaced(knots, 0, 0);
+        footRFz = Eigen::VectorXd::LinSpaced(knots, 0, 0);
+
+        visual_poly_->publishEigenSpheres(footLFx, footLFy, footLFz, rviz_visual_tools::BLUE, rviz_visual_tools::LARGE, "com_path");
+        visual_poly_->publishEigenSpheres(footRFx, footRFy, footRFz, rviz_visual_tools::RED, rviz_visual_tools::LARGE, "com_path");
+
+        //visual_poly_->publishEigenPath(foot_LF_x, foot_LF_y, foot_LF_z, rviz_visual_tools::RED, rviz_visual_tools::LARGE, "com_path");
+        //visual_poly_->publishEigenPath(foot_RF_x, foot_RF_y, foot_RF_z, rviz_visual_tools::RED, rviz_visual_tools::LARGE, "com_path");
+        //visual_poly_->publishEigenPath(foot_LH_x, foot_LH_y, foot_LH_z, rviz_visual_tools::RED, rviz_visual_tools::LARGE, "com_path");
+        //visual_poly_->publishEigenPath(foot_RH_x, foot_RH_y, foot_RH_z, rviz_visual_tools::RED, rviz_visual_tools::LARGE, "com_path");
+
+        // Don't forget to trigger the publisher!
+        visual_poly_->trigger();
+        //r.sleep();
+  }
+
 
   return (int) status;
 }
