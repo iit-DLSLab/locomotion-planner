@@ -1,5 +1,5 @@
 cmake_minimum_required (VERSION 2.6)
-project(motion_planner)
+project(locomotion-planner)
 # The version number.
 set (Tutorial_VERSION_MAJOR 1)
 set (Tutorial_VERSION_MINOR 0)
@@ -8,7 +8,7 @@ set ( libipopt.a )
 
 find_package(catkin REQUIRED
   roscpp
-  motion_viewer
+  locomotion-viewer
   )
 
 find_package(PkgConfig)
@@ -17,7 +17,7 @@ pkg_check_modules(EIGEN3 eigen3 REQUIRED)
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES ${PROJECT_NAME}
-  CATKIN_DEPENDS roscpp motion_viewer
+  CATKIN_DEPENDS roscpp locomotion-viewer
 )
 
 # configure a header file to pass some of the CMake settings
@@ -30,6 +30,6 @@ include_directories(include ${catkin_INCLUDE_DIRS})
 include_directories("${PROJECT_BINARY_DIR}" /usr/local/include/coin/)						
 
 # creation of an executable
-add_executable(NL_planner motion_planner_example.cpp src/motion_planner.cpp)
+add_executable(NL_planner motion_planner_example.cpp src/locomotion-planner.cpp)
 target_link_libraries(NL_planner ${catkin_LIBRARIES} ipopt)
 set_target_properties(NL_planner PROPERTIES COMPILE_FLAGS "-std=c++11 -o3" RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/bin") 

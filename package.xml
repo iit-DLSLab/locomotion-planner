@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package>
-  <name>motion_planner</name>
+  <name>locomotion-planner</name>
   <version>0.0.1</version>
   <description>identify trunk CoM position without stopping the execution of the current task</description>
 
@@ -15,10 +15,10 @@
   <build_depend>roscpp</build_depend>
   <build_depend>roslib</build_depend>
   <build_depend>rviz_visual_tools</build_depend>
-  <build_depend>motion_viewer</build_depend>
+  <build_depend>locomotion-viewer</build_depend>
   <run_depend>roscpp</run_depend>
   <run_depend>roslib</run_depend>
   <run_depend>rviz_visual_tools</run_depend>  
-  <run_depend>motion_viewer</run_depend>  
+  <run_depend>locomotion-viewer</run_depend>  
 
 </package>

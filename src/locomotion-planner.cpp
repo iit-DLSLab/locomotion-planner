@@ -6,7 +6,7 @@
 //
 // Authors:  Carl Laird, Andreas Waechter     IBM    2004-11-05
 
-#include "motion_planner/motion_planner.hpp"
+#include "locomotion-planner/locomotion-planner.hpp"
 
 #include <cassert>
 

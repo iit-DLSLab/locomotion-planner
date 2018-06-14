@@ -5,10 +5,9 @@
 // $Id$
 //
 // Authors:  Carl Laird, Andreas Waechter     IBM    2005-08-10
-
 #include "IpIpoptApplication.hpp"
-#include "motion_planner/motion_planner.hpp"
-#include <motion_viewer/RvizMarkersPub.h>
+#include "locomotion-planner/locomotion-planner.hpp"
+#include <locomotion-viewer/RvizMarkersPub.h>
 
 
 using namespace Ipopt;

@@ -1,2 +1,2 @@
 # locomotion-planner
-Repo for locomotion optimization, visualization and replanning
+Repo for locomotion optimization and replanning
